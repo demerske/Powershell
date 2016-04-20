@@ -1,4 +1,4 @@
-﻿$path = 'X:\Music'
+﻿$path = #path to clear
 
 $folders = @()
 
