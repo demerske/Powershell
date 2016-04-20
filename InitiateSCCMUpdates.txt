@@ -1,0 +1,55 @@
+﻿$sccm = new-object -comobject UDA.CCMUpdatesDeployment
+
+[ref]$prog = $Null
+
+$updates = $sccm.enumerateupdates(2,$true,$prog)
+$ids = @()
+
+For($i=0;$i -lt $updates.getcount();$i++){
+    $id = $updates.getupdate($i).getid()
+    $ids += $id
+}
+
+$opt = 0x0001 -bor 0x0002 -bor 0x0020
+
+$sccm.installupdates($ids,0,$opt)
+
+$done = $false
+
+While($done -eq $false){
+[ref]$prog = $Null
+$updates = $sccm.enumerateupdates(2,$true,$prog)
+$done = $true
+    For($i=0;$i -lt $updates.getcount();$i++){
+        [ref]$stg = $Null
+        [ref]$pct = $Null
+        [ref]$err = $Null
+
+        $updates.getupdate($i).getprogress($stg,$pct,$err)
+
+        $stg = $stg.value
+
+        switch($stg){
+            0 {$done = $false}
+            1 {$done = $false}
+            2 {$done = $false}
+            3 {$done = $false}
+            4 {$done = $false}
+            5 {$done = $false}
+            6 {$done = $false}
+            7 {$done = $false}
+            8 {$done = $false}
+            9 {$done = $false}
+            10 {}
+            11 {}
+            12 {}
+            13 {$done = $false}
+            14 {}
+            15 {}
+            16 {$done = $false}
+        }
+    }
+}
+
+#restart-computer
+Write-Host "Reboot time"
